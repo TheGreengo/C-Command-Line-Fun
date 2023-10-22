@@ -33,28 +33,26 @@ void printBoard(struct Game * g) {
 }
 
 void makeMove(struct Game * g) {
-    if ((*g).turn == PLAYER_ONE) {
-        printf("\n\n\n\n\n");
-        printf("Player one's turn: \n");
-        printBoard(g);
-        printf("\n\n\n\n\n");
+    char play[3] = (*g).turn == PLAYER_ONE ? "one" : "two";
+    (*g).turn = (*g).turn == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE;
 
-        printf("Enter move: ");
+    printf("\n\n\n\n\n");
+    printf("Player %s's turn: \n", play);
+    printBoard(g);
+    printf("\n\n\n\n\n");
 
+    int res = 9;
 
-
-        (*g).turn = PLAYER_TWO;
-    } else if ((*g).turn == PLAYER_TWO) {
-        printf("\n\n\n\n\n");
-        printf("Player two's turn: \n");
-        printBoard(g);
-        printf("\n\n\n\n\n");
-
-        printf("Enter move: ");
-
-        (*g).turn = PLAYER_ONE;
+    while (res == 9) {
+        res = getInput();
+        if (res == 9) {
+            printf("Invalid play. Either that spot is taken or you had a typo. \n\
+            Please type only two characters, the row and colum of your desired\
+             play, with no spaces in between. For example \"A1\"");
+        }
     }
 
+    (*g).board[res] = (*g).turn == PLAYER_ONE ? 'X' : 'O';
     // mark that a turn has happened
     (*g).turns++;
 }
