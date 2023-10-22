@@ -12,6 +12,7 @@ struct Game {
     enum Turn turn;
     char board[9];
     size_t turns;
+    size_t winner;
 };
 
 // initializes game with empty board set for Player One to go
@@ -21,6 +22,7 @@ void setup(struct Game * g) {
     }
     (*g).turn = PLAYER_ONE;
     (*g).turns = 0;
+    (*g).winner = 0;
 }
 
 // Prints the current game layout to the command line
@@ -88,16 +90,46 @@ void makeMove(struct Game * g) {
 
 }
 
+size_t checkWin(struct Game * g) {
+    size_t one = (((*g).board[0] == (*g).board[1]) && ((*g).board[0] == (*g).board[2]) && ((*g).board[0] == 'X')) ||\
+    (((*g).board[0] == (*g).board[3]) && ((*g).board[0] == (*g).board[6]) && ((*g).board[0] == 'X')) ||\
+    (((*g).board[0] == (*g).board[4]) && ((*g).board[0] == (*g).board[8]) && ((*g).board[0] == 'X')) ||\
+    (((*g).board[3] == (*g).board[4]) && ((*g).board[3] == (*g).board[5]) && ((*g).board[3] == 'X')) ||\
+    (((*g).board[6] == (*g).board[7]) && ((*g).board[6] == (*g).board[8]) && ((*g).board[6] == 'X')) ||\
+    (((*g).board[1] == (*g).board[4]) && ((*g).board[1] == (*g).board[7]) && ((*g).board[1] == 'X')) ||\
+    (((*g).board[2] == (*g).board[5]) && ((*g).board[2] == (*g).board[8]) && ((*g).board[2] == 'X')) ||\
+    (((*g).board[2] == (*g).board[4]) && ((*g).board[2] == (*g).board[6]) && ((*g).board[2] == 'X'));
+
+    size_t two = (((*g).board[0] == (*g).board[1]) && ((*g).board[0] == (*g).board[2]) && ((*g).board[0] == 'O')) ||\
+    (((*g).board[0] == (*g).board[3]) && ((*g).board[0] == (*g).board[6]) && ((*g).board[0] == 'O')) ||\
+    (((*g).board[0] == (*g).board[4]) && ((*g).board[0] == (*g).board[8]) && ((*g).board[0] == 'O')) ||\
+    (((*g).board[3] == (*g).board[4]) && ((*g).board[3] == (*g).board[5]) && ((*g).board[3] == 'O')) ||\
+    (((*g).board[6] == (*g).board[7]) && ((*g).board[6] == (*g).board[8]) && ((*g).board[6] == 'O')) ||\
+    (((*g).board[1] == (*g).board[4]) && ((*g).board[1] == (*g).board[7]) && ((*g).board[1] == 'O')) ||\
+    (((*g).board[2] == (*g).board[5]) && ((*g).board[2] == (*g).board[8]) && ((*g).board[2] == 'O')) ||\
+    (((*g).board[2] == (*g).board[4]) && ((*g).board[2] == (*g).board[6]) && ((*g).board[2] == 'O'));
+
+    if (one == two) {
+        return 0;
+    } 
+    return one > two ? 1 : 2;
+}
+
 int main(void) {
     struct Game g;
     setup(&g);
-    printBoard(&g);
 
-    while (g.turns < 9) {
+    while (g.turns < 9 && g.winner == 0) {
         makeMove(&g);
+        g.winner = checkWin(&g);
     }
 
     printBoard(&g);
+    if (g.winner) {
+        g.winner == 1 ? printf("Player one wins!\n") : printf("Player two wins\n");
+    } else {
+        printf("Tied game!\n");
+    }
 
     return 0;
 }
