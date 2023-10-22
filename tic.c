@@ -27,11 +27,12 @@ void setup(struct Game * g) {
 
 // Prints the current game layout to the command line
 void printBoard(struct Game * g) {
-    printf("\n  %c | %c | %c \n", (*g).board[0],(*g).board[1],(*g).board[2]);
-    printf(" ___________\n");
-    printf("  %c | %c | %c \n", (*g).board[3],(*g).board[4],(*g).board[5]);
-    printf(" ___________\n");
-    printf("  %c | %c | %c \n\n", (*g).board[6],(*g).board[7],(*g).board[8]);
+    printf("\n   A | B | C \n");
+    printf("\n1  %c | %c | %c \n", (*g).board[0],(*g).board[1],(*g).board[2]);
+    printf("  ___________\n");
+    printf("2  %c | %c | %c \n", (*g).board[3],(*g).board[4],(*g).board[5]);
+    printf("  ___________\n");
+    printf("3  %c | %c | %c \n\n", (*g).board[6],(*g).board[7],(*g).board[8]);
 }
 
 size_t getUInput() {
