@@ -32,19 +32,44 @@ void printBoard(struct Game * g) {
     printf("  %c | %c | %c \n\n", (*g).board[6],(*g).board[7],(*g).board[8]);
 }
 
-void makeMove(struct Game * g) {
-    char play[3] = (*g).turn == PLAYER_ONE ? "one" : "two";
-    (*g).turn = (*g).turn == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE;
+size_t getUInput() {
+    char response[20];
+    printf("Please input your move: ");
+    scanf("%s", response);
+    if (response[0] == '1' && (response[1] == 'A' || response[1] == 'a')) {
+        return 0;
+    } else if (response[0] == '1' && (response[1] == 'B' || response[1] == 'b')) {
+        return 1;
+    } else if (response[0] == '1' && (response[1] == 'C' || response[1] == 'c')) {
+        return 2;
+    } else if (response[0] == '2' && (response[1] == 'A' || response[1] == 'a')) {
+        return 3;
+    } else if (response[0] == '2' && (response[1] == 'B' || response[1] == 'b')) {
+        return 4;
+    } else if (response[0] == '2' && (response[1] == 'C' || response[1] == 'c')) {
+        return 5;
+    } else if (response[0] == '3' && (response[1] == 'A' || response[1] == 'a')) {
+        return 6;
+    } else if (response[0] == '3' && (response[1] == 'B' || response[1] == 'b')) {
+        return 7;
+    } else if (response[0] == '3' && (response[1] == 'C' || response[1] == 'c')) {
+        return 8;
+    } else {
+        return 9;
+    }
+}
 
+void makeMove(struct Game * g) {
+    // start by printing board and announcing who's turn it is
     printf("\n\n\n\n\n");
-    printf("Player %s's turn: \n", play);
+    (*g).turn == PLAYER_ONE ? printf("Player one's turn: \n") : printf("Player two's turn: \n");
     printBoard(g);
     printf("\n\n\n\n\n");
 
-    int res = 9;
-
+    // loop to keep requesting input until valid input is received
+    size_t res = 9;
     while (res == 9) {
-        res = getInput();
+        res = getUInput();
         if (res == 9) {
             printf("Invalid play. Either that spot is taken or you had a typo. \n\
             Please type only two characters, the row and colum of your desired\
@@ -52,36 +77,15 @@ void makeMove(struct Game * g) {
         }
     }
 
+    // mark play
     (*g).board[res] = (*g).turn == PLAYER_ONE ? 'X' : 'O';
-    // mark that a turn has happened
-    (*g).turns++;
-}
 
-size_t getInput() {
-    char response[20];
-    printf("Please input your move: ");
-    scanf("%s", response);
-    if (response[1] == '1' && (response[0] == 'A' || response[0] == 'a')) {
-        return 0;
-    } else if (response[1] == '1' && (response[0] == 'B' || response[0] == 'b')) {
-        return 1;
-    } else if (response[1] == '1' && (response[0] == 'C' || response[0] == 'c')) {
-        return 2;
-    } else if (response[1] == '2' && (response[0] == 'A' || response[0] == 'a')) {
-        return 3;
-    } else if (response[1] == '2' && (response[0] == 'B' || response[0] == 'b')) {
-        return 4;
-    } else if (response[1] == '2' && (response[0] == 'C' || response[0] == 'c')) {
-        return 5;
-    } else if (response[1] == '3' && (response[0] == 'A' || response[0] == 'a')) {
-        return 6;
-    } else if (response[1] == '3' && (response[0] == 'B' || response[0] == 'b')) {
-        return 7;
-    } else if (response[1] == '3' && (response[0] == 'C' || response[0] == 'c')) {
-        return 8;
-    } else {
-        return 9;
-    }
+    // mark that a turn has happened
+    (*g).turns++;    
+
+    // switch players
+    (*g).turn = (*g).turn == PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE;
+
 }
 
 int main(void) {
@@ -92,6 +96,8 @@ int main(void) {
     while (g.turns < 9) {
         makeMove(&g);
     }
+
+    printBoard(&g);
 
     return 0;
 }
