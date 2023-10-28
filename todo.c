@@ -2,15 +2,23 @@
 #include "stdlib.h"
 #include "string.h"
 
-void printTodos(char ** todos, int count) {
-    int i = 0;
-    while (i < count) {
-        printf("%s\n", todos[i]);
-        i++;
-    }
+// Save todos to text file
+void writeOutTodos(char ** todos) {
+
 }
 
-// This is working except it keeps adding an extra empty line
+// Outputs todos to terminal
+void printTodos(char ** todos, int count) {
+    printf("\n");
+    int i = 0;
+    while (i < count) {
+        printf("%d: %s", i+1, todos[i]);
+        i++;
+    }
+    printf("\n");
+}
+
+// Add a new todo to the todolist
 void addTodo(char *** todos, char * todo, size_t * count) {
     (* count)++;
     int i = 0;
@@ -38,8 +46,32 @@ void addTodo(char *** todos, char * todo, size_t * count) {
     temp = NULL;
 }
 
-void removeTodo(char ** todos, size_t num, size_t * count) {
+void removeTodo(char *** todos, size_t num, size_t * count) {
+    size_t i = 0;
+    char ** temp;
+    temp = malloc(((*count)- 1) * sizeof* temp);
 
+    int offset = 0;
+    while (i < (* count)) {
+        if (i != (num - 1) ) {
+            temp[i + offset] = malloc(200 * sizeof* temp[i + offset]);
+            strcpy(temp[i + offset],(* todos)[i]);
+        } else {
+            offset = -1;
+        }
+        i++;
+    }
+
+    i = 0;
+    while (i < (* count) - 1) {
+        free((* todos)[i]);
+        i++;
+    }
+    free((* todos));
+
+    (*todos) = temp;
+
+    temp = NULL;
     (* count)--;
 }
 
@@ -69,7 +101,8 @@ int main(void) {
     file = fopen("tasks.txt", "r");
     while ((buf = getc(file)) != EOF) {
         if (buf == '\n') {
-            todos[count][select] = '\0';
+            todos[count][select] = buf;
+            todos[count][select + 1] = '\0';
             count++;
             select = 0;
         } else {
@@ -87,10 +120,13 @@ int main(void) {
     while (1) {
         printTodos(todos, count);
         res = getline(&buffer, &thing, stdin);
+        
         if (buffer[0] == 'a') { addTodo(&todos, &buffer[2], &count); }
-        if (buffer[0] == 'd') { removeTodo(todos, (((size_t) buffer[2]) - ((size_t) "0")), & count); }
+        if (buffer[0] == 'd') { removeTodo(&todos, (((size_t) buffer[2]) - ((size_t) '0')), & count); }
         if (buffer[0] == 'q') { break; }
     }
+
+    writeOutTodos(todos);
 
     i = 0; 
     while (i < count) { 
