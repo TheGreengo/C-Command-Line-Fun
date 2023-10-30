@@ -3,8 +3,15 @@
 #include "string.h"
 
 // Save todos to text file
-void writeOutTodos(char ** todos) {
-
+void writeOutTodos(char ** todos, int count) {
+    FILE * file;
+    file = fopen("tasks.txt", "w");
+    int i = 0;
+    while (i < count) {
+        fprintf(file, "%s", todos[i]);
+        i++;
+    }
+    fclose(file);
 }
 
 // Outputs todos to terminal
@@ -126,7 +133,7 @@ int main(void) {
         if (buffer[0] == 'q') { break; }
     }
 
-    writeOutTodos(todos);
+    writeOutTodos(todos, count);
 
     i = 0; 
     while (i < count) { 
