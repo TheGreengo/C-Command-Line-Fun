@@ -8,15 +8,15 @@ enum Turn {
 };
 
 // Simple struct for tracking the moves remaining, moves, and turn
-struct Game {
+typedef struct {
     enum Turn turn;
     char board[9];
     size_t turns;
     size_t winner;
-};
+} Game;
 
 // initializes game with empty board set for Player One to go
-void setup(struct Game * g) {
+void setup(Game * g) {
     for (size_t i = 0; i < 9; i++) {
         (*g).board[i] = ' ';
     }
@@ -26,7 +26,7 @@ void setup(struct Game * g) {
 }
 
 // Prints the current game layout to the command line
-void printBoard(struct Game * g) {
+void printBoard(Game * g) {
     printf("\n   A | B | C \n");
     printf("\n1  %c | %c | %c \n", (*g).board[0],(*g).board[1],(*g).board[2]);
     printf("  ___________\n");
@@ -62,7 +62,7 @@ size_t getUInput() {
     }
 }
 
-void makeMove(struct Game * g) {
+void makeMove(Game * g) {
     // start by printing board and announcing who's turn it is
     printf("\n\n\n\n\n");
     (*g).turn == PLAYER_ONE ? printf("Player one's turn: \n") : printf("Player two's turn: \n");
@@ -91,7 +91,7 @@ void makeMove(struct Game * g) {
 
 }
 
-size_t checkWin(struct Game * g) {
+size_t checkWin(Game * g) {
     size_t one = (((*g).board[0] == (*g).board[1]) && ((*g).board[0] == (*g).board[2]) && ((*g).board[0] == 'X')) ||\
     (((*g).board[0] == (*g).board[3]) && ((*g).board[0] == (*g).board[6]) && ((*g).board[0] == 'X')) ||\
     (((*g).board[0] == (*g).board[4]) && ((*g).board[0] == (*g).board[8]) && ((*g).board[0] == 'X')) ||\
@@ -117,7 +117,7 @@ size_t checkWin(struct Game * g) {
 }
 
 int main(void) {
-    struct Game g;
+    Game g;
     setup(&g);
 
     while (g.turns < 9 && g.winner == 0) {
